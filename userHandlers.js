@@ -27,7 +27,27 @@ const getUserById = (req, res) => {
     })
 }
 
+const postUser = (req, res) => {
+    // console.log(req.body)
+    // res.send("Post user route is working 🎉")
+    const { firstname, lastname, email, city, language } = req.body;
+
+    database
+        .query(
+            "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
+            [firstname, lastname, email, city, language]
+        )
+        .then(([result]) => {
+            res.location(`/api/users/${result.insertId}`)
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send("Error saving user");
+        })
+}
+
 module.exports = {
     getUsers,
-    getUserById
+    getUserById,
+    postUser,
 };
